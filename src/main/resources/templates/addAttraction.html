@@ -34,7 +34,7 @@
                 <select id="city" th:field="*{city}" required>
                     <option value="">Vælg en by</option>
                     <option th:each="city: ${cities}"
-                            th:value="${city}"
+                            th:value="${city.name}"
                             th:text="${city.displayName}">
                     </option>
                 </select>

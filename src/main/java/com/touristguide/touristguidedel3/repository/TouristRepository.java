@@ -4,8 +4,12 @@ import com.touristguide.touristguidedel3.model.Tag;
 import com.touristguide.touristguidedel3.model.TouristAttraction;
 import com.touristguide.touristguidedel3.model.TouristAttractionRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,25 +27,44 @@ public class TouristRepository {
     //Create
     //======
     public void addAttraction(TouristAttraction attraction) {
-        String sql = "INSERT INTO tourist_attraction (name, description, city, price) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO tourist_attraction (name, description, city, price) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, attraction.getName());
+            ps.setString(2, attraction.getDescription());
+            ps.setString(3, attraction.getCity().name().trim());
+            ps.setBigDecimal(4, attraction.getPrice());
+            return ps;
+        }, keyHolder);
 
-        jdbcTemplate.update(sql,
-                attraction.getName(),
-                attraction.getDescription(),
-                attraction.getCity().name(),
-                attraction.getPrice());
+        Long id = keyHolder.getKey().longValue();
 
-        Long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
-
-        String insertTag = "INSERT INTO tourist_attraction_tag (attraction_id, tag_id) VALUES (?, ?)";
-
-        for(Tag tag : attraction.getTags()) {
-            Long tagId = jdbcTemplate.queryForObject(
+        String insertTagSql = "INSERT INTO tourist_attraction_tag (attraction_id, tag_id) VALUES (?, ?)";
+        for (Tag tag : attraction.getTags()) {
+            // Tjek om tag findes
+            List<Long> tagIds = jdbcTemplate.query(
                     "SELECT id FROM tag WHERE name = ?",
-                    Long.class,
+                    (rs, rowNum) -> rs.getLong("id"),
                     tag.name()
             );
-            jdbcTemplate.update(insertTag, id, tagId);
+
+            Long tagId;
+            if (tagIds.isEmpty()) {
+                // Opret tag hvis det ikke findes
+                jdbcTemplate.update("INSERT INTO tag (name) VALUES (?)", tag.name());
+                tagId = jdbcTemplate.queryForObject(
+                        "SELECT id FROM tag WHERE name = ?",
+                        Long.class,
+                        tag.name()
+                );
+            } else {
+                tagId = tagIds.get(0);
+            }
+
+            jdbcTemplate.update(insertTagSql, id, tagId);
         }
     }
 
