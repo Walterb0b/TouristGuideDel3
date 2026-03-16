@@ -1,7 +1,7 @@
-package com.touristguidedel2.touristguidedel2.service;
+package com.touristguidedel3.touristguidedel3.service;
 
-import com.touristguidedel2.touristguidedel2.model.TouristAttraction;
-import com.touristguidedel2.touristguidedel2.repository.TouristRepository;
+import com.touristguidedel3.touristguidedel3.model.TouristAttraction;
+import com.touristguidedel3.touristguidedel3.repository.TouristRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
