@@ -80,9 +80,9 @@ public class TouristController {
         return "redirect:/attractions";
     }
 
-    @PostMapping("/{name}/delete")
-    public String deleteAttraction(@PathVariable String name) {
-        touristService.deleteAttraction(name);
+    @PostMapping("/{id}/delete")
+    public String deleteAttraction(@PathVariable Long id) {
+        touristService.deleteAttraction(id);
         return "redirect:/attractions";
     }
 }

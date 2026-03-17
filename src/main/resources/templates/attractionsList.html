@@ -42,7 +42,7 @@
                         <a th:href="@{/attractions/{name}/tags(name=${attraction.name})}" style="display: block; margin-bottom: 6px;">
                             <button type="button" style="padding: 6px 10px; font-size: 0.8rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">🏷️ Tags</button>
                         </a>
-                        <form th:action="@{/attractions/{name}/delete(name=${attraction.name})}" method="post" style="display: block;">
+                        <form th:action="@{|/attractions/${attraction.id}/delete|}" method="post" style="display: block;">
                             <button type="submit" style="padding: 6px 10px; font-size: 0.8rem; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">🗑️ Slet</button>
                         </form>
                     </td>

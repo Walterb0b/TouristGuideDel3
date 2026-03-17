@@ -24,6 +24,7 @@ public class TouristRepository {
 
             TouristAttraction attraction = new TouristAttraction();
 
+            attraction.setId(rs.getLong("id"));
             attraction.setName(rs.getString("name"));
             attraction.setDescription(rs.getString("description"));
             attraction.setCity(Cities.valueOf(rs.getString("city")));
@@ -54,9 +55,9 @@ public class TouristRepository {
         }
     }
 
-    public void deleteAttraction(String name) {
-        String sql = "DELETE FROM tourist_attraction WHERE name = ?";
-        jdbcTemplate.update(sql, name);
+    public void deleteAttraction(Long id) {
+        String sql = "DELETE FROM tourist_attraction WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     public void updateAttraction(TouristAttraction attraction) {

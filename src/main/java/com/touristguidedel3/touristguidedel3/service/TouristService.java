@@ -30,8 +30,8 @@ public class TouristService {
         repository.updateAttraction(updatedAttraction);
     }
 
-    public void deleteAttraction(String name) {
-        repository.deleteAttraction(name);
+    public void deleteAttraction(Long id) {
+        repository.deleteAttraction(id);
     }
 
     public TouristAttraction getAttractionById(Long id) {
