@@ -33,4 +33,8 @@ public class TouristService {
     public void deleteAttraction(String name) {
         repository.deleteAttraction(name);
     }
+
+    public TouristAttraction getAttractionById(Long id) {
+        return repository.getAttractionById(id);
+    }
 }

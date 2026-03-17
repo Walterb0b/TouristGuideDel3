@@ -40,9 +40,9 @@ public class TouristRepository {
                 attraction.getCity().name(),
                 attraction.getPrice());
 
-        Integer attractionId = jdbcTemplate.queryForObject(
+        Long attractionId = jdbcTemplate.queryForObject(
                 "SELECT id FROM tourist_attraction WHERE name = ?",
-                Integer.class, attraction.getName()
+                Long.class, attraction.getName()
         );
         if (attraction.getTags() != null) {
             for (Tags tag : attraction.getTags()) {
@@ -67,9 +67,9 @@ public class TouristRepository {
                 attraction.getPrice(),
                 attraction.getName());
 
-        Integer attractionId = jdbcTemplate.queryForObject(
+        Long attractionId = jdbcTemplate.queryForObject(
                 "SELECT id FROM tourist_attraction WHERE name = ?",
-                Integer.class, attraction.getName()
+                Long.class, attraction.getName()
         );
         jdbcTemplate.update("DELETE FROM attraction_tag WHERE attraction_id = ?", attractionId);
         if (attraction.getTags() != null) {
@@ -120,5 +120,24 @@ public class TouristRepository {
                 "SELECT id FROM tag WHERE name = ?",
                 Integer.class, tag.name()
         );
+    }
+
+    public TouristAttraction getAttractionById(Long id) {
+        String sql = "SELECT * FROM tourist_attraction WHERE id = ?";
+
+        TouristAttraction attraction = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            TouristAttraction a = new TouristAttraction();
+            a.setName(rs.getString("name"));
+            a.setDescription(rs.getString("description"));
+            a.setCity(Cities.valueOf(rs.getString("city")));
+            a.setPrice(rs.getDouble("price"));
+            return a;
+        }, id);
+
+        // Hent tags
+        List<Tags> tags = getTagsForAttraction(attraction.getName());
+        attraction.setTags(tags);
+
+        return attraction;
     }
 }

@@ -8,6 +8,7 @@ public class TouristAttraction {
     private Cities city;
     private List<Tags> tags;
     private double price;
+    private Long id;
 
     public TouristAttraction(String name, String description, Cities city, List<Tags> tags, double price) {
         this.name = name;
@@ -55,5 +56,12 @@ public class TouristAttraction {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 }
