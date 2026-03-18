@@ -1,4 +1,4 @@
-package com.touristguidedel2.touristguidedel2.model;
+package com.touristguidedel3.touristguidedel3.model;
 
 public enum Tags {
     KID_FRIENDLY("Børnevenlig"),

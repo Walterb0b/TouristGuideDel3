@@ -1,4 +1,4 @@
-package com.touristguidedel2.touristguidedel2;
+package com.touristguidedel3.touristguidedel3;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

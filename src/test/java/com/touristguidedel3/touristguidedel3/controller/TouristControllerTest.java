@@ -1,9 +1,9 @@
-package com.touristguidedel2.touristguidedel2.controller;
+package com.touristguidedel3.touristguidedel3.controller;
 
-import com.touristguidedel2.touristguidedel2.model.Cities;
-import com.touristguidedel2.touristguidedel2.model.Tags;
-import com.touristguidedel2.touristguidedel2.model.TouristAttraction;
-import com.touristguidedel2.touristguidedel2.service.TouristService;
+import com.touristguidedel3.touristguidedel3.model.Cities;
+import com.touristguidedel3.touristguidedel3.model.Tags;
+import com.touristguidedel3.touristguidedel3.model.TouristAttraction;
+import com.touristguidedel3.touristguidedel3.service.TouristService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
