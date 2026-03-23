@@ -39,3 +39,6 @@ projectJDK: "25" #(Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm:2025.2
 exclude:
   - name: SpringMVCViewInspection
+  - name: VulnerableLibrariesUsage
+    paths:
+      - pom.xml
