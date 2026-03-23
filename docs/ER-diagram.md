@@ -1,6 +1,6 @@
 ```mermaid
 erDiagram
-    TOURIST_ATTRACTION ||--o{ ATTRACTION_TAGS : allows
+    TOURIST_ATTRACTION ||--o{ ATTRACTION_TAGS : has
     TOURIST_ATTRACTION {
         BIGINT attraction_id PK
         varchar(255) name
@@ -9,7 +9,7 @@ erDiagram
         double price
  }
     
-    ATTRACTION_TAGS }o--||TAGS : is
+    ATTRACTION_TAGS }o--||TAGS : has
     ATTRACTION_TAGS {
         BIGINT attraction_id PK,FK
         BIGINT tag_id PK,FK

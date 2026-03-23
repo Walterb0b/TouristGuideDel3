@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Something went wrong</h1>
+    <div class="error-box">
+        <p>
+            <strong>Status:</strong>
+            <span th:text="${status}">500</span>
+        </p>
+        <p>
+            <strong>Error:</strong>
+            <span th:text="${error}">Internal server error</span>
+        </p>
+        <p>
+            <strong>Message:</strong>
+            <span th:text="${message}">Unexpected error</span>
+        </p>
+    </div>
+
+    <p>
+        The application encountered an error
+    </p>
+    <div class="actions">
+        <a th:href="@{/attractions}" class="cta-button">Back to attractions</a>
+    </div>
+
+</div>
+
+</body>
