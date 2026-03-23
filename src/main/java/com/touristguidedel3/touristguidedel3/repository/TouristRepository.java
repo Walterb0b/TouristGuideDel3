@@ -4,9 +4,11 @@ import com.touristguidedel3.touristguidedel3.model.Tags;
 import com.touristguidedel3.touristguidedel3.model.Cities;
 import com.touristguidedel3.touristguidedel3.model.TouristAttraction;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class TouristRepository {
@@ -17,19 +19,19 @@ public class TouristRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<TouristAttraction> attractionRowMapper = (rs, rowNum) -> {
+        TouristAttraction attraction = new TouristAttraction();
+        attraction.setId(rs.getLong("id"));
+        attraction.setName(rs.getString("name"));
+        attraction.setDescription(rs.getString("description"));
+        attraction.setCity(Cities.valueOf(rs.getString("city")));
+        attraction.setPrice(rs.getDouble("price"));
+        return attraction;
+    };
+
     public List<TouristAttraction> getAllAttractions() {
         String sql = "SELECT * FROM tourist_attraction";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-
-            TouristAttraction attraction = new TouristAttraction();
-
-            attraction.setId(rs.getLong("id"));
-            attraction.setName(rs.getString("name"));
-            attraction.setDescription(rs.getString("description"));
-            attraction.setCity(Cities.valueOf(rs.getString("city")));
-            attraction.setPrice(rs.getDouble("price"));
-            return attraction;
-        });
+        return jdbcTemplate.query(sql, attractionRowMapper);
     }
 
     public void addAttraction(TouristAttraction attraction) {
@@ -84,33 +86,28 @@ public class TouristRepository {
 
     }
 
-    public TouristAttraction getAttractionByName(String name) {
-        String sql = "SELECT * FROM tourist_attraction WHERE LOWER(name) = LOWER(?)";
-
-        TouristAttraction attraction = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            TouristAttraction a = new TouristAttraction();
-            a.setName(rs.getString("name"));
-            a.setDescription(rs.getString("description"));
-            a.setCity(Cities.valueOf(rs.getString("city")));
-            a.setPrice(rs.getDouble("price"));
-            return a;
-        }, name);
-
-        // Hent tags
-        List<Tags> tags = getTagsForAttraction(name);
-        attraction.setTags(tags);
-
+    private TouristAttraction getSingleAttraction(String sql, Object param) {
+        TouristAttraction attraction = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, attractionRowMapper, param), "Attraktion ikke fundet");
+        attraction.setTags(getTagsForAttraction(attraction.getName()));
         return attraction;
+    }
+
+    public TouristAttraction getAttractionByName(String name) {
+        return getSingleAttraction("SELECT * FROM tourist_attraction WHERE LOWER(name) = LOWER(?)", name);
+    }
+
+    public TouristAttraction getAttractionById(Long id) {
+        return getSingleAttraction("SELECT * FROM tourist_attraction WHERE id = ?", id);
     }
 
     public List<Tags> getTagsForAttraction(String attractionName) {
         String sql = """
-        SELECT t.name
-        FROM tag t
-        JOIN attraction_tag at ON t.id = at.tag_id
-        JOIN tourist_attraction ta ON ta.id = at.attraction_id
-        WHERE ta.name = ?
-        """;
+                SELECT t.name
+                FROM tag t
+                JOIN attraction_tag at ON t.id = at.tag_id
+                JOIN tourist_attraction ta ON ta.id = at.attraction_id
+                WHERE ta.name = ?
+                """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> Tags.valueOf(rs.getString("name")), attractionName);
     }
@@ -120,24 +117,5 @@ public class TouristRepository {
                 "SELECT id FROM tag WHERE name = ?",
                 Integer.class, tag.name()
         );
-    }
-
-    public TouristAttraction getAttractionById(Long id) {
-        String sql = "SELECT * FROM tourist_attraction WHERE id = ?";
-
-        TouristAttraction attraction = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            TouristAttraction a = new TouristAttraction();
-            a.setName(rs.getString("name"));
-            a.setDescription(rs.getString("description"));
-            a.setCity(Cities.valueOf(rs.getString("city")));
-            a.setPrice(rs.getDouble("price"));
-            return a;
-        }, id);
-
-        // Hent tags
-        List<Tags> tags = getTagsForAttraction(attraction.getName());
-        attraction.setTags(tags);
-
-        return attraction;
     }
 }
