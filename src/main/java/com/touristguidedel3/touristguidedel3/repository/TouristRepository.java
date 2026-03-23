@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class TouristRepository {
@@ -86,7 +87,7 @@ public class TouristRepository {
     }
 
     private TouristAttraction getSingleAttraction(String sql, Object param) {
-        TouristAttraction attraction = jdbcTemplate.queryForObject(sql, attractionRowMapper, param);
+        TouristAttraction attraction = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, attractionRowMapper, param), "Attraktion ikke fundet");
         attraction.setTags(getTagsForAttraction(attraction.getName()));
         return attraction;
     }
@@ -98,15 +99,15 @@ public class TouristRepository {
     public TouristAttraction getAttractionById(Long id) {
         return getSingleAttraction("SELECT * FROM tourist_attraction WHERE id = ?", id);
     }
-    
+
     public List<Tags> getTagsForAttraction(String attractionName) {
         String sql = """
-        SELECT t.name
-        FROM tag t
-        JOIN attraction_tag at ON t.id = at.tag_id
-        JOIN tourist_attraction ta ON ta.id = at.attraction_id
-        WHERE ta.name = ?
-        """;
+                SELECT t.name
+                FROM tag t
+                JOIN attraction_tag at ON t.id = at.tag_id
+                JOIN tourist_attraction ta ON ta.id = at.attraction_id
+                WHERE ta.name = ?
+                """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> Tags.valueOf(rs.getString("name")), attractionName);
     }
