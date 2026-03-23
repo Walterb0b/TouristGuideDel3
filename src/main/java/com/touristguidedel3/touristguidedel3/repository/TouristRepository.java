@@ -1,7 +1,6 @@
 package com.touristguidedel3.touristguidedel3.repository;
 
 import com.touristguidedel3.touristguidedel3.model.Tags;
-import java.util.ArrayList;
 import com.touristguidedel3.touristguidedel3.model.Cities;
 import com.touristguidedel3.touristguidedel3.model.TouristAttraction;
 import org.springframework.jdbc.core.JdbcTemplate;
