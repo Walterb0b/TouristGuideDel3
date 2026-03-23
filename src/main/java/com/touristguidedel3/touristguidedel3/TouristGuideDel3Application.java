@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 class TouristGuideDel3Application {
-
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(TouristGuideDel3Application.class, args);
     }
-
 }
